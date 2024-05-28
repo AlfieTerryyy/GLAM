@@ -1,81 +1,73 @@
 import tkinter as tk
+from tkinter import simpledialog, messagebox
 
-def password_lock():
-    password = "2911107243"
+def check_password():
+    entered_password = password_entry.get()
+    if entered_password == "2911107243":  # Replace with your desired password
+        root.deiconify()  # Show the main window
+        password_popup.destroy()  # Close the password popup
+    else:
+        password_entry.delete(0, tk.END)  # Clear the entry field
+        password_entry.focus_set()  # Set focus back to the entry field
+        messagebox.showerror("Incorrect Password", "Please enter the correct password.")
 
-    def check_password():
-        user_input = entry.get()
-        if user_input == password:
-            print("Welcome")
+def apply_letter_mapping(user_input):
+    letter_mapping = {
+        'a': 'z', 'b': 'y', 'c': 'x', 'd': 'w',
+        'e': 'v', 'f': 'u', 'g': 't', 'h': 's',
+        'i': 'r', 'j': 'q', 'k': 'p', 'l': 'o',
+        'm': 'n', 'n': 'm', 'o': 'l', 'p': 'k',
+        'q': 'j', 'r': 'i', 's': 'h', 't': 'g',
+        'u': 'f', 'v': 'e', 'w': 'd', 'x': 'c',
+        'y': 'b', 'z': 'a',
+    }
+
+    result = ""
+    for char in user_input.lower():
+        if char.isalpha():
+            result += letter_mapping.get(char, char)
         else:
-            print("Failed to connect, please try reloading or re-typing the password")
+            result += char
+    return result
 
-    root = tk.Tk()
-    root.title("Password Lock")
+def process_user_input():
+    user_input = input_entry.get()
+    output_text = apply_letter_mapping(user_input)
+    output_label.config(text=f"Output: {output_text}")
 
-    label = tk.Label(root, text="Enter Security code:")
-    label.pack()
+# Create the main Tkinter window
+root = tk.Tk()
+root.title("Password Lock with Letter Mapping")
 
-    entry = tk.Entry(root)
-    entry.pack()
+# Hide the main window initially
+root.withdraw()
 
-    button = tk.Button(root, text="Check", command=check_password)
-    button.pack()
+# Create a password popup window
+password_popup = tk.Toplevel(root)
+password_popup.title("Enter Password")
 
-    root.mainloop()
+# Create an entry field for the password
+password_entry = tk.Entry(password_popup, show="*")
+password_entry.pack()
 
-def main():
-    password_lock()
+# Create a button to check the password
+check_button = tk.Button(password_popup, text="Enter", command=check_password)
+check_button.pack()
 
-    while True:
-        user_input = input("usr: ")
+# Set focus to the password entry field
+password_entry.focus_set()
 
-        if user_input.lower() == 'exit':
-            print("Exiting the program.")
-            break
- letter_mapping = {
-         'a': 'z', 'b': 'y', 'c': 'x', 'd': 'w',
-         'e': 'v', 'f': 'u', 'g': 't', 'h': 's',
-         'i': 'r', 'j': 'q', 'k': 'p', 'l': 'o',
-         'm': 'n', 'n': 'm', 'o': 'l', 'p': 'k',
-         'q': 'j', 'r': 'i', 's': 'h', 't': 'g',
-         'u': 'f', 'v': 'e', 'w': 'd', 'x': 'c',
-         'y': 'b', 'z': 'a',
-         '1': '1', '2': '2', '3': '3', '4': '4',
-         '5': '5', '6': '6', '7': '7', '8': '8',
-         '9': '9', '0': '0',
-         '!': '!', '@': '@', '#': '#', '$': '$',
-         '%': '%', '^': '^', '&': '&', '*': '*',
-         '(': '(', ')': ')', '-': '-', '_': '_',
-         '=': '=', '+': '+', '[': '[', ']': ']',
-         '{': '{', '}': '}', '|': '|', '\\': '\\',
-         '`': '`', '~': '~', '<': '<', '>': '>',
-         '?': '?', '/': '/', '.': '.', ',': ',',
-         ';': ';', ':': ':', '"': '"', "'": "'",
-     }
+# Create an entry field for user input
+input_entry = tk.Entry(root)
+input_entry.pack()
 
+# Create a button to process user input
+process_button = tk.Button(root, text="Process Input", command=process_user_input)
+process_button.pack()
 
+# Create a label to display the processed output
+output_label = tk.Label(root, text="")
+output_label.pack()
 
-     user_input_lower = user_input.lower()
-
-
-
-     result = ""
-
-
-
-     for char in user_input_lower:
-         if char.isalpha():
-             result += letter_mapping.get(char, char)
-         else:
-             result += char
-
-
-
-     print(f"Output: {result}")
-
-if __name__ == "__main__":
-    main()
-
-
-
+# Start the Tkinter event loop
+root.mainloop()
